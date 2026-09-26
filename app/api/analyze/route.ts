@@ -13,7 +13,7 @@ const analysisSchema = {
     grade: { anyOf: [{ type: "integer", enum: [7, 8, 9] }, { type: "null" }] },
     topic: { type: "string" },
     concept: { type: "string" },
-    simulationId: { type: "string", enum: ["convex_lens", "unknown"] },
+    simulationId: { type: "string", enum: ["convex_lens", "linear_motion", "unknown"] },
     confidence: { type: "number", minimum: 0, maximum: 1 },
     reason: { type: "string" },
     parameters: {
@@ -28,6 +28,16 @@ const analysisSchema = {
             showFocalPoints: { type: "boolean" }
           },
           required: ["focalLengthCm", "objectDistanceCm", "showRays", "showFocalPoints"]
+        },
+        {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            initialSpeedMps: { type: "number", minimum: 0, maximum: 20 },
+            trackLengthM: { type: "number", minimum: 50, maximum: 500 },
+            durationS: { type: "number", minimum: 5, maximum: 60 }
+          },
+          required: ["initialSpeedMps", "trackLengthM", "durationS"]
         },
         { type: "null" }
       ]
@@ -47,6 +57,25 @@ const analysisSchema = {
 } as const;
 
 function mockResult(): SimulationAnalysis {
+  if (process.env.STELLA_MOCK_SIMULATION === "linear_motion") {
+    return {
+      recognized: true,
+      subject: "physics",
+      grade: 8,
+      topic: "Chuyển động",
+      concept: "Chuyển động thẳng và đồ thị quãng đường - thời gian",
+      simulationId: "linear_motion",
+      confidence: 0.99,
+      reason: "Mock mode: dùng mô phỏng xe chạy và đồ thị s-t để kiểm thử luồng điều phối.",
+      parameters: {
+        initialSpeedMps: 8,
+        trackLengthM: 100,
+        durationS: 20,
+      },
+      source: "mock",
+    };
+  }
+
   return {
     recognized: true,
     subject: "physics",

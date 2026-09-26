@@ -1,4 +1,4 @@
-export type SimulationId = "convex_lens" | "unknown";
+export type SimulationId = "convex_lens" | "linear_motion" | "unknown";
 
 export type ConvexLensParams = {
   focalLengthCm: number;
@@ -6,6 +6,14 @@ export type ConvexLensParams = {
   showRays: boolean;
   showFocalPoints: boolean;
 };
+
+export type LinearMotionParams = {
+  initialSpeedMps: number;
+  trackLengthM: number;
+  durationS: number;
+};
+
+export type SimulationParams = ConvexLensParams | LinearMotionParams;
 
 export type SimulationAnalysis = {
   recognized: boolean;
@@ -16,6 +24,6 @@ export type SimulationAnalysis = {
   simulationId: SimulationId;
   confidence: number;
   reason: string;
-  parameters: ConvexLensParams | null;
+  parameters: SimulationParams | null;
   source: "openai" | "mock";
 };
