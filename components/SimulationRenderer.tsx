@@ -1,9 +1,11 @@
 "use client";
 
 import ConvexLensSimulation from "@/components/ConvexLensSimulation";
+import ElectricCircuitSimulation from "@/components/ElectricCircuitSimulation";
 import LinearMotionSimulation from "@/components/LinearMotionSimulation";
 import type {
   ConvexLensParams,
+  ElectricCircuitParams,
   LinearMotionParams,
   SimulationAnalysis,
   SimulationParams,
@@ -17,6 +19,10 @@ function isLinearMotionParams(params: SimulationParams | null): params is Linear
   return params != null && "initialSpeedMps" in params;
 }
 
+function isElectricCircuitParams(params: SimulationParams | null): params is ElectricCircuitParams {
+  return params != null && "voltageV" in params;
+}
+
 export default function SimulationRenderer({ analysis }: { analysis: SimulationAnalysis }) {
   if (analysis.simulationId === "convex_lens" && isConvexLensParams(analysis.parameters)) {
     return <ConvexLensSimulation initial={analysis.parameters} />;
@@ -24,6 +30,10 @@ export default function SimulationRenderer({ analysis }: { analysis: SimulationA
 
   if (analysis.simulationId === "linear_motion" && isLinearMotionParams(analysis.parameters)) {
     return <LinearMotionSimulation initial={analysis.parameters} />;
+  }
+
+  if (analysis.simulationId === "electric_circuit" && isElectricCircuitParams(analysis.parameters)) {
+    return <ElectricCircuitSimulation initial={analysis.parameters} />;
   }
 
   return (
