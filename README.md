@@ -46,7 +46,6 @@ components/
   SimulationRenderer.tsx     # chọn component theo simulationId
 lib/
   physics.ts                 # công thức thấu kính
-  simulationRegistry.ts      # danh sách simulation được phép
   stellaPrompt.ts            # prompt điều phối AI
 types/
   simulation.ts              # types dùng chung
@@ -57,9 +56,8 @@ types/
 Thêm simulation mới theo pattern:
 
 1. Thêm ID vào `SimulationId`.
-2. Đăng ký trong `simulationRegistry.ts`.
-3. Tạo component simulation.
-4. Thêm case trong `SimulationRenderer.tsx`.
-5. Thêm ID vào JSON schema của AI route.
+2. Tạo component simulation.
+3. Thêm case trong `SimulationRenderer.tsx`.
+4. Thêm ID vào JSON schema của AI route.
 
 AI không tự viết physics engine. Nó chỉ nhận diện và điều phối tới simulation đã được kiểm chứng.
