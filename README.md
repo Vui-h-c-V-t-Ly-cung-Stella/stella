@@ -1,4 +1,4 @@
-# Vui học Vật lý cùng Stella — MVP
+# STELLA
 
 Prototype TypeScript/Next.js cho flow:
 
