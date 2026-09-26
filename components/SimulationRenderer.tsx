@@ -1,11 +1,29 @@
 "use client";
 
 import ConvexLensSimulation from "@/components/ConvexLensSimulation";
-import type { SimulationAnalysis } from "@/types/simulation";
+import LinearMotionSimulation from "@/components/LinearMotionSimulation";
+import type {
+  ConvexLensParams,
+  LinearMotionParams,
+  SimulationAnalysis,
+  SimulationParams,
+} from "@/types/simulation";
+
+function isConvexLensParams(params: SimulationParams | null): params is ConvexLensParams {
+  return params != null && "focalLengthCm" in params;
+}
+
+function isLinearMotionParams(params: SimulationParams | null): params is LinearMotionParams {
+  return params != null && "initialSpeedMps" in params;
+}
 
 export default function SimulationRenderer({ analysis }: { analysis: SimulationAnalysis }) {
-  if (analysis.simulationId === "convex_lens" && analysis.parameters) {
+  if (analysis.simulationId === "convex_lens" && isConvexLensParams(analysis.parameters)) {
     return <ConvexLensSimulation initial={analysis.parameters} />;
+  }
+
+  if (analysis.simulationId === "linear_motion" && isLinearMotionParams(analysis.parameters)) {
+    return <LinearMotionSimulation initial={analysis.parameters} />;
   }
 
   return (

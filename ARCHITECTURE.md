@@ -20,12 +20,12 @@ POST /api/analyze
                                   v
                       <SimulationRenderer />
                                   |
-                     +------------+-------------+
-                     |                          |
-              convex_lens                  unknown
-                     |
-                     v
-          <ConvexLensSimulation />
+              +---------------+---------------+
+              |               |               |
+       convex_lens      linear_motion       unknown
+              |               |
+              v               v
+ <ConvexLensSimulation />  <LinearMotionSimulation />
 ```
 
 ## Vì sao AI không generate code simulation?
