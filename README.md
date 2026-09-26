@@ -8,7 +8,7 @@ Prototype TypeScript/Next.js cho flow:
 4. Simulation Router chọn component phù hợp.
 5. Mô phỏng nhận các tham số ban đầu từ AI.
 
-Hiện MVP implement `convex_lens` (thấu kính hội tụ), `linear_motion` (chuyển động thẳng + đồ thị s-t) và fallback `unknown`.
+Hiện MVP implement `convex_lens` (thấu kính hội tụ), `linear_motion` (chuyển động thẳng + đồ thị s-t), `electric_circuit` (mạch điện nối tiếp/song song) và fallback `unknown`.
 
 ## Chạy nhanh
 
@@ -22,7 +22,7 @@ Mở http://localhost:3000
 
 ### Không có API key
 
-Để `OPENAI_API_KEY` trống. App sẽ chạy **mock mode**. Dùng `STELLA_MOCK_SIMULATION=linear_motion` để test mô phỏng chuyển động; mặc định là thấu kính hội tụ.
+Để `OPENAI_API_KEY` trống. App sẽ chạy **mock mode**. Dùng `STELLA_MOCK_SIMULATION=linear_motion` hoặc `electric_circuit` để chọn mô phỏng; mặc định là thấu kính hội tụ.
 
 ### Có OpenAI API key
 
@@ -43,9 +43,11 @@ app/
   page.tsx                   # upload + result + router
 components/
   ConvexLensSimulation.tsx   # mô phỏng chạy thật
+  ElectricCircuitSimulation.tsx # mạch điện nối tiếp/song song
   LinearMotionSimulation.tsx # xe chạy + đồ thị s-t trực tiếp
   SimulationRenderer.tsx     # chọn component theo simulationId
 lib/
+  circuit.ts                 # định luật Ohm cho hai kiểu mạch
   physics.ts                 # công thức thấu kính
   stellaPrompt.ts            # prompt điều phối AI
 types/

@@ -1,4 +1,4 @@
-export type SimulationId = "convex_lens" | "linear_motion" | "unknown";
+export type SimulationId = "convex_lens" | "linear_motion" | "electric_circuit" | "unknown";
 
 export type ConvexLensParams = {
   focalLengthCm: number;
@@ -13,7 +13,16 @@ export type LinearMotionParams = {
   durationS: number;
 };
 
-export type SimulationParams = ConvexLensParams | LinearMotionParams;
+export type CircuitConnection = "series" | "parallel";
+
+export type ElectricCircuitParams = {
+  voltageV: number;
+  resistor1Ohm: number;
+  resistor2Ohm: number;
+  connection: CircuitConnection;
+};
+
+export type SimulationParams = ConvexLensParams | LinearMotionParams | ElectricCircuitParams;
 
 export type SimulationAnalysis = {
   recognized: boolean;

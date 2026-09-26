@@ -13,7 +13,7 @@ const analysisSchema = {
     grade: { anyOf: [{ type: "integer", enum: [7, 8, 9] }, { type: "null" }] },
     topic: { type: "string" },
     concept: { type: "string" },
-    simulationId: { type: "string", enum: ["convex_lens", "linear_motion", "unknown"] },
+    simulationId: { type: "string", enum: ["convex_lens", "linear_motion", "electric_circuit", "unknown"] },
     confidence: { type: "number", minimum: 0, maximum: 1 },
     reason: { type: "string" },
     parameters: {
@@ -39,6 +39,17 @@ const analysisSchema = {
           },
           required: ["initialSpeedMps", "trackLengthM", "durationS"]
         },
+        {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            voltageV: { type: "number", minimum: 1.5, maximum: 12 },
+            resistor1Ohm: { type: "number", minimum: 1, maximum: 20 },
+            resistor2Ohm: { type: "number", minimum: 1, maximum: 20 },
+            connection: { type: "string", enum: ["series", "parallel"] }
+          },
+          required: ["voltageV", "resistor1Ohm", "resistor2Ohm", "connection"]
+        },
         { type: "null" }
       ]
     }
@@ -57,6 +68,26 @@ const analysisSchema = {
 } as const;
 
 function mockResult(): SimulationAnalysis {
+  if (process.env.STELLA_MOCK_SIMULATION === "electric_circuit") {
+    return {
+      recognized: true,
+      subject: "physics",
+      grade: 9,
+      topic: "Điện học",
+      concept: "Mạch điện nối tiếp và song song",
+      simulationId: "electric_circuit",
+      confidence: 0.99,
+      reason: "Mock mode: dùng mô phỏng mạch điện để kiểm thử luồng điều phối.",
+      parameters: {
+        voltageV: 6,
+        resistor1Ohm: 6,
+        resistor2Ohm: 12,
+        connection: "series",
+      },
+      source: "mock",
+    };
+  }
+
   if (process.env.STELLA_MOCK_SIMULATION === "linear_motion") {
     return {
       recognized: true,
