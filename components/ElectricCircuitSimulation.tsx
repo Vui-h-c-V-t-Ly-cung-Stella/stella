@@ -312,13 +312,69 @@ export default function ElectricCircuitSimulation({ initial }: { initial: Electr
         <div className="card">
           <strong>Stella</strong>
           <p>{stellaMessage()}</p>
-          <p>Điện trở tương đương: {state.equivalentResistanceOhm.toFixed(2)} Ω</p>
-          <p>Dòng điện toàn mạch: {state.totalCurrentA.toFixed(2)} A</p>
+          <strong>Các bước tính toàn mạch</strong>
+          {connection === "series" ? (
+            <p>
+              R<sub>tđ</sub> = R<sub>1</sub> + R<sub>2</sub> = {resistor1Ohm.toFixed(0)} + {resistor2Ohm.toFixed(0)} = {state.equivalentResistanceOhm.toFixed(2)} Ω
+            </p>
+          ) : (
+            <p>
+              R<sub>tđ</sub> = (R<sub>1</sub> × R<sub>2</sub>) / (R<sub>1</sub> + R<sub>2</sub>) = ({resistor1Ohm.toFixed(0)} × {resistor2Ohm.toFixed(0)}) / ({resistor1Ohm.toFixed(0)} + {resistor2Ohm.toFixed(0)}) = {state.equivalentResistanceOhm.toFixed(2)} Ω
+            </p>
+          )}
+          {switchClosed ? (
+            <p>
+              I = U / R<sub>tđ</sub> = {voltageV.toFixed(2)} / {state.equivalentResistanceOhm.toFixed(2)} = {state.totalCurrentA.toFixed(2)} A
+            </p>
+          ) : (
+            <p>Mạch hở ⇒ I = 0 A.</p>
+          )}
+          <p><strong>Kết quả:</strong> R<sub>tđ</sub> = {state.equivalentResistanceOhm.toFixed(2)} Ω, I = {state.totalCurrentA.toFixed(2)} A</p>
         </div>
         <div className="card">
           <strong>Số đo hai bóng</strong>
-          <p>Bóng 1: I = {state.current1A.toFixed(2)} A, U = {state.voltage1V.toFixed(2)} V, P = {state.power1W.toFixed(2)} W</p>
-          <p>Bóng 2: I = {state.current2A.toFixed(2)} A, U = {state.voltage2V.toFixed(2)} V, P = {state.power2W.toFixed(2)} W</p>
+          {switchClosed ? (
+            <>
+              <p>
+                <strong>Bóng 1</strong><br />
+                {connection === "series" ? (
+                  <>
+                    I<sub>1</sub> = I = {state.current1A.toFixed(2)} A<br />
+                    U<sub>1</sub> = I × R<sub>1</sub> = {state.current1A.toFixed(4)} × {resistor1Ohm.toFixed(0)} = {state.voltage1V.toFixed(2)} V
+                  </>
+                ) : (
+                  <>
+                    U<sub>1</sub> = U = {state.voltage1V.toFixed(2)} V<br />
+                    I<sub>1</sub> = U<sub>1</sub> / R<sub>1</sub> = {state.voltage1V.toFixed(2)} / {resistor1Ohm.toFixed(0)} = {state.current1A.toFixed(2)} A
+                  </>
+                )}<br />
+                P<sub>1</sub> = U<sub>1</sub> × I<sub>1</sub> = {state.voltage1V.toFixed(4)} × {state.current1A.toFixed(4)} = {state.power1W.toFixed(2)} W<br />
+                <strong>Kết quả:</strong> I = {state.current1A.toFixed(2)} A, U = {state.voltage1V.toFixed(2)} V, P = {state.power1W.toFixed(2)} W
+              </p>
+              <p>
+                <strong>Bóng 2</strong><br />
+                {connection === "series" ? (
+                  <>
+                    I<sub>2</sub> = I = {state.current2A.toFixed(2)} A<br />
+                    U<sub>2</sub> = I × R<sub>2</sub> = {state.current2A.toFixed(4)} × {resistor2Ohm.toFixed(0)} = {state.voltage2V.toFixed(2)} V
+                  </>
+                ) : (
+                  <>
+                    U<sub>2</sub> = U = {state.voltage2V.toFixed(2)} V<br />
+                    I<sub>2</sub> = U<sub>2</sub> / R<sub>2</sub> = {state.voltage2V.toFixed(2)} / {resistor2Ohm.toFixed(0)} = {state.current2A.toFixed(2)} A
+                  </>
+                )}<br />
+                P<sub>2</sub> = U<sub>2</sub> × I<sub>2</sub> = {state.voltage2V.toFixed(4)} × {state.current2A.toFixed(4)} = {state.power2W.toFixed(2)} W<br />
+                <strong>Kết quả:</strong> I = {state.current2A.toFixed(2)} A, U = {state.voltage2V.toFixed(2)} V, P = {state.power2W.toFixed(2)} W
+              </p>
+            </>
+          ) : (
+            <>
+              <p>I<sub>1</sub> = I<sub>2</sub> = 0 A vì mạch không kín.</p>
+              <p>P<sub>1</sub> = U<sub>1</sub> × I<sub>1</sub> = 0 W; P<sub>2</sub> = U<sub>2</sub> × I<sub>2</sub> = 0 W.</p>
+              <p><strong>Kết quả:</strong> cả hai bóng đều tắt.</p>
+            </>
+          )}
         </div>
       </div>
     </div>
