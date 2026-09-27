@@ -2,10 +2,12 @@
 
 import ConvexLensSimulation from "@/components/ConvexLensSimulation";
 import ElectricCircuitSimulation from "@/components/ElectricCircuitSimulation";
+import ForceFrictionSimulation from "@/components/ForceFrictionSimulation";
 import LinearMotionSimulation from "@/components/LinearMotionSimulation";
 import type {
   ConvexLensParams,
   ElectricCircuitParams,
+  ForceFrictionParams,
   LinearMotionParams,
   SimulationAnalysis,
   SimulationParams,
@@ -23,6 +25,10 @@ function isElectricCircuitParams(params: SimulationParams | null): params is Ele
   return params != null && "voltageV" in params;
 }
 
+function isForceFrictionParams(params: SimulationParams | null): params is ForceFrictionParams {
+  return params != null && "pullingForceN" in params;
+}
+
 export default function SimulationRenderer({ analysis }: { analysis: SimulationAnalysis }) {
   if (analysis.simulationId === "convex_lens" && isConvexLensParams(analysis.parameters)) {
     return <ConvexLensSimulation initial={analysis.parameters} />;
@@ -30,6 +36,10 @@ export default function SimulationRenderer({ analysis }: { analysis: SimulationA
 
   if (analysis.simulationId === "linear_motion" && isLinearMotionParams(analysis.parameters)) {
     return <LinearMotionSimulation initial={analysis.parameters} />;
+  }
+
+  if (analysis.simulationId === "force_friction" && isForceFrictionParams(analysis.parameters)) {
+    return <ForceFrictionSimulation initial={analysis.parameters} />;
   }
 
   if (analysis.simulationId === "electric_circuit" && isElectricCircuitParams(analysis.parameters)) {

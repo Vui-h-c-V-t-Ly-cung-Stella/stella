@@ -13,7 +13,7 @@ const analysisSchema = {
     grade: { anyOf: [{ type: "integer", enum: [7, 8, 9] }, { type: "null" }] },
     topic: { type: "string" },
     concept: { type: "string" },
-    simulationId: { type: "string", enum: ["convex_lens", "linear_motion", "electric_circuit", "unknown"] },
+    simulationId: { type: "string", enum: ["convex_lens", "linear_motion", "force_friction", "electric_circuit", "unknown"] },
     confidence: { type: "number", minimum: 0, maximum: 1 },
     reason: { type: "string" },
     parameters: {
@@ -38,6 +38,18 @@ const analysisSchema = {
             durationS: { type: "number", minimum: 5, maximum: 60 }
           },
           required: ["initialSpeedMps", "trackLengthM", "durationS"]
+        },
+        {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            pullingForceN: { type: "number", minimum: 0, maximum: 40 },
+            frictionForceN: { type: "number", minimum: 0, maximum: 30 },
+            massKg: { type: "number", minimum: 5, maximum: 30 },
+            initialSpeedMps: { type: "number", minimum: 0, maximum: 10 },
+            durationS: { type: "number", minimum: 5, maximum: 20 }
+          },
+          required: ["pullingForceN", "frictionForceN", "massKg", "initialSpeedMps", "durationS"]
         },
         {
           type: "object",
@@ -68,6 +80,27 @@ const analysisSchema = {
 } as const;
 
 function mockResult(): SimulationAnalysis {
+  if (process.env.STELLA_MOCK_SIMULATION === "force_friction") {
+    return {
+      recognized: true,
+      subject: "physics",
+      grade: 8,
+      topic: "Cơ học",
+      concept: "Lực kéo, lực ma sát và gia tốc",
+      simulationId: "force_friction",
+      confidence: 0.99,
+      reason: "Mock mode: dùng mô phỏng lực và chuyển động để kiểm thử luồng điều phối.",
+      parameters: {
+        pullingForceN: 20,
+        frictionForceN: 5,
+        massKg: 10,
+        initialSpeedMps: 0,
+        durationS: 10,
+      },
+      source: "mock",
+    };
+  }
+
   if (process.env.STELLA_MOCK_SIMULATION === "electric_circuit") {
     return {
       recognized: true,

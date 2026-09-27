@@ -2,12 +2,86 @@
 
 import { useEffect, useState } from "react";
 import SimulationRenderer from "@/components/SimulationRenderer";
-import type { SimulationAnalysis } from "@/types/simulation";
+import type { SimulationAnalysis, SimulationId } from "@/types/simulation";
+
+type ManualSimulationId = Exclude<SimulationId, "unknown">;
+
+const MANUAL_SIMULATIONS: Record<ManualSimulationId, SimulationAnalysis> = {
+  convex_lens: {
+    recognized: true,
+    subject: "physics",
+    grade: 9,
+    topic: "Quang học",
+    concept: "Thấu kính hội tụ",
+    simulationId: "convex_lens",
+    confidence: 1,
+    reason: "Bạn đã chọn mô phỏng thấu kính hội tụ theo cách thủ công.",
+    parameters: {
+      focalLengthCm: 8,
+      objectDistanceCm: 18,
+      showRays: true,
+      showFocalPoints: true,
+    },
+    source: "manual",
+  },
+  linear_motion: {
+    recognized: true,
+    subject: "physics",
+    grade: 8,
+    topic: "Chuyển động",
+    concept: "Chuyển động thẳng và đồ thị quãng đường - thời gian",
+    simulationId: "linear_motion",
+    confidence: 1,
+    reason: "Bạn đã chọn mô phỏng chuyển động và đồ thị s-t theo cách thủ công.",
+    parameters: {
+      initialSpeedMps: 8,
+      trackLengthM: 100,
+      durationS: 20,
+    },
+    source: "manual",
+  },
+  electric_circuit: {
+    recognized: true,
+    subject: "physics",
+    grade: 9,
+    topic: "Điện học",
+    concept: "Mạch điện nối tiếp và song song",
+    simulationId: "electric_circuit",
+    confidence: 1,
+    reason: "Bạn đã chọn mô phỏng mạch điện theo cách thủ công.",
+    parameters: {
+      voltageV: 6,
+      resistor1Ohm: 6,
+      resistor2Ohm: 12,
+      connection: "series",
+    },
+    source: "manual",
+  },
+  force_friction: {
+    recognized: true,
+    subject: "physics",
+    grade: 8,
+    topic: "Cơ học",
+    concept: "Lực kéo, lực ma sát và gia tốc",
+    simulationId: "force_friction",
+    confidence: 1,
+    reason: "Bạn đã chọn mô phỏng lực kéo và lực ma sát theo cách thủ công.",
+    parameters: {
+      pullingForceN: 20,
+      frictionForceN: 5,
+      massKg: 10,
+      initialSpeedMps: 0,
+      durationS: 10,
+    },
+    source: "manual",
+  },
+};
 
 export default function HomePage() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<SimulationAnalysis | null>(null);
+  const [manualSimulationId, setManualSimulationId] = useState<ManualSimulationId>("convex_lens");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,6 +116,11 @@ export default function HomePage() {
     }
   }
 
+  function openManualSimulation() {
+    setError(null);
+    setAnalysis(MANUAL_SIMULATIONS[manualSimulationId]);
+  }
+
   return (
     <main className="stack">
       <header>
@@ -53,7 +132,27 @@ export default function HomePage() {
 
       <section className="card stack">
         <div>
-          <h2 style={{ marginTop: 0 }}>1. Đưa hình minh họa cho Stella</h2>
+          <h2 style={{ marginTop: 0 }}>1. Chọn mô phỏng</h2>
+          <div className="row">
+            <label style={{ flex: "1 1 280px", maxWidth: 430, minWidth: 0 }}>
+              <span>Mở thủ công</span>
+              <select
+                value={manualSimulationId}
+                onChange={(event) => setManualSimulationId(event.target.value as ManualSimulationId)}
+                style={{ width: "100%", padding: "9px 11px", border: "1px solid #999", borderRadius: 8, background: "white" }}
+              >
+                <option value="convex_lens">1. Thấu kính hội tụ</option>
+                <option value="linear_motion">2. Chuyển động và đồ thị s-t</option>
+                <option value="electric_circuit">3. Mạch điện nối tiếp và song song</option>
+                <option value="force_friction">4. Lực kéo và lực ma sát</option>
+              </select>
+            </label>
+            <button className="primary" onClick={openManualSimulation}>Mở mô phỏng đã chọn</button>
+          </div>
+        </div>
+
+        <div style={{ borderTop: "1px solid #ddd", paddingTop: 16 }}>
+          <h3 style={{ marginTop: 0 }}>Hoặc đưa hình minh họa cho Stella</h3>
           <input
             type="file"
             accept="image/png,image/jpeg,image/webp"
@@ -92,7 +191,9 @@ export default function HomePage() {
               <div>
                 <h2 style={{ marginTop: 0 }}>2. Stella đã điều phối</h2>
                 <div className="row">
-                  <span className="badge">{analysis.source === "mock" ? "MOCK" : "AI"}</span>
+                  <span className="badge">
+                    {analysis.source === "mock" ? "MOCK" : analysis.source === "manual" ? "MANUAL" : "AI"}
+                  </span>
                   <span className="badge">simulation: {analysis.simulationId}</span>
                   <span className="badge">confidence: {(analysis.confidence * 100).toFixed(0)}%</span>
                 </div>

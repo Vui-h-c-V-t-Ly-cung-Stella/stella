@@ -20,13 +20,13 @@ POST /api/analyze
                                   v
                       <SimulationRenderer />
                                   |
-       +--------------+---------------+------------------+----------+
-       |              |               |                  |
- convex_lens    linear_motion   electric_circuit      unknown
-       |              |               |
-       v              v               v
- ConvexLens     LinearMotion    ElectricCircuit
- Simulation     Simulation      Simulation
+       +--------------+---------------+----------------+------------------+----------+
+       |              |               |                |                  |
+ convex_lens    linear_motion   force_friction   electric_circuit      unknown
+       |              |               |                |
+       v              v               v                v
+ ConvexLens     LinearMotion    ForceFriction    ElectricCircuit
+ Simulation     Simulation      Simulation        Simulation
 ```
 
 ## Vì sao AI không generate code simulation?

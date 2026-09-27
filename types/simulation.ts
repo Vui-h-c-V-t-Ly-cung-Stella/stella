@@ -1,4 +1,4 @@
-export type SimulationId = "convex_lens" | "linear_motion" | "electric_circuit" | "unknown";
+export type SimulationId = "convex_lens" | "linear_motion" | "force_friction" | "electric_circuit" | "unknown";
 
 export type ConvexLensParams = {
   focalLengthCm: number;
@@ -13,6 +13,14 @@ export type LinearMotionParams = {
   durationS: number;
 };
 
+export type ForceFrictionParams = {
+  pullingForceN: number;
+  frictionForceN: number;
+  massKg: number;
+  initialSpeedMps: number;
+  durationS: number;
+};
+
 export type CircuitConnection = "series" | "parallel";
 
 export type ElectricCircuitParams = {
@@ -22,7 +30,7 @@ export type ElectricCircuitParams = {
   connection: CircuitConnection;
 };
 
-export type SimulationParams = ConvexLensParams | LinearMotionParams | ElectricCircuitParams;
+export type SimulationParams = ConvexLensParams | LinearMotionParams | ForceFrictionParams | ElectricCircuitParams;
 
 export type SimulationAnalysis = {
   recognized: boolean;
@@ -34,5 +42,5 @@ export type SimulationAnalysis = {
   confidence: number;
   reason: string;
   parameters: SimulationParams | null;
-  source: "openai" | "mock";
+  source: "openai" | "mock" | "manual";
 };
